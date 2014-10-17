@@ -16,5 +16,5 @@
 
 using namespace std;
 
-int get_subnet();
+int get_subnet(string interface);
 #endif

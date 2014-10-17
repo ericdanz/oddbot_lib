@@ -9,7 +9,7 @@
 
 #include <oddbot_lib/get_subnet.h>
 
-int get_subnet() {
+int get_subnet(string interface) {
   int fd;
   struct ifreq ifr;
 
@@ -19,7 +19,7 @@ int get_subnet() {
   ifr.ifr_addr.sa_family = AF_INET;
 
   /* I want IP address attached to "subnet" */
-  strncpy(ifr.ifr_name, "eth0", IFNAMSIZ-1);
+  strncpy(ifr.ifr_name, interface.c_str(), IFNAMSIZ-1);
 
   ioctl(fd, SIOCGIFADDR, &ifr);
 
