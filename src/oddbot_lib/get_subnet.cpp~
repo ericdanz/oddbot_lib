@@ -9,7 +9,7 @@
 
 #include <oddbot_lib/get_subnet.h>
 
-int get_subnet(string interface) {
+int get_subnet(string interface = "eth0") {
   int fd;
   struct ifreq ifr;
 
