@@ -151,10 +151,10 @@ int CSerial::ReadData()
 	readCheck = read( thePORT, readBuffer , sizeof readBuffer);
 
 	/* Error Handling */
-	if (readCheck < 0)
-	{
-	    cout << "Error reading: " << strerror(errno) << endl;
-	}
+//	if (readCheck < 0)
+//	{
+//	    cout << "Error reading: " << strerror(errno) << endl;
+//	}
 
 	//cout << "Read: " << readBuffer<< endl;
 
