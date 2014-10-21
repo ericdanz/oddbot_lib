@@ -26,23 +26,22 @@ class CSerial
 {
 
 public:
-	CSerial(char *pn);
-	//~CSerial();
-
-	bool Open( int nBaud = 9600 );
+	CSerial(char *pn, int);
+	~CSerial();
+	bool Open( );
 	bool Close( void );
 	char * portName;
 	int ReadData();
 	int SendData( const char *);
-	//int ReadDataWaiting( void );
 	char readBuffer[256];
 	int thePORT;	
+	int baudRate;
 	int readCheck;
 	int length(char strname []);
 	bool IsOpened( void ){ return( is_port_open ); }
 
 protected:
-	bool WriteCommByte( unsigned char );
+	
 
 	bool is_port_open;
 

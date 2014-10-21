@@ -2,24 +2,25 @@
 
 #include "./Serial.h"
 using namespace std;
-CSerial::CSerial(char *pn)
+CSerial::CSerial(char *pn, int br=9600)
 {
 	
 	
 	portName = pn;
+	baudRate = br;
 	is_port_open = false;
-	is_port_open = Open(9600);
+	is_port_open = Open();
 
 }
 
-//CSerial::~CSerial()
-//{
+CSerial::~CSerial()
+{
 
-//	Close();
+	Close();
 
-//}
+}
 
-bool CSerial::Open( int nBaud )
+bool CSerial::Open( )
 {
 
 	if( is_port_open ) return( true );
@@ -45,7 +46,28 @@ if ( tcgetattr ( thePORT, &tty ) != 0 )
 }
 
 /* Set Baud Rate */
-cfsetospeed (&tty, B9600);
+switch(baudRate)
+{
+ 	case 9600:
+	cfsetospeed (&tty, B9600);
+	break;
+
+	case 38400:
+	cfsetospeed (&tty, B38400);
+	break;
+
+	case 57600:
+	cfsetospeed (&tty, B57600);
+	break;
+
+	case 115200:
+	cfsetospeed (&tty, B115200);
+	break;
+
+	default:
+	cfsetospeed (&tty, B9600);	
+}
+
 
 /* Setting other Port Stuff */
 tty.c_cflag     &=  ~PARENB;        // Make 8n1
@@ -90,82 +112,30 @@ bool CSerial::Close( void )
 
 }
 
-//bool CSerial::WriteCommByte( unsigned char ucByte )
-//{
-//	BOOL bWriteStat;
-//	DWORD dwBytesWritten;
-
-//	bWriteStat = WriteFile( m_hIDComDev, (LPSTR) &ucByte, 1, &dwBytesWritten, &m_OverlappedWrite );
-//	if( !bWriteStat && ( GetLastError() == ERROR_IO_PENDING ) ){
-//		if( WaitForSingleObject( m_OverlappedWrite.hEvent, 1000 ) ) dwBytesWritten = 0;
-//		else{
-//			GetOverlappedResult( m_hIDComDev, &m_OverlappedWrite, &dwBytesWritten, FALSE );
-//			m_OverlappedWrite.Offset += dwBytesWritten;
-//			}
-//		}
-
-//	return( TRUE );
-
-//}
 
 int CSerial::SendData( const char *buffer )
 {
 
 	if( !is_port_open ) return( 0 );
-	int n_written = write( thePORT, buffer, sizeof(buffer) -1 );
+	readCheck = write( thePORT, buffer, sizeof(buffer) -1 );
 	//might need for loop, to pass size variable
-	return( n_written);
+	return readCheck;
 
 }
 
-//int CSerial::ReadDataWaiting( void )
-//{
 
-//	if( !is_port_open || m_hIDComDev == NULL ) return( 0 );
-
-//	DWORD dwErrorFlags;
-//	COMSTAT ComStat;
-
-//	ClearCommError( m_hIDComDev, &dwErrorFlags, &ComStat );
-
-//	return( (int) ComStat.cbInQue );
-
-//}
-
-//int CSerial::ReadData( char* readBuffer )
 int CSerial::ReadData()
 {
 
 	if( !is_port_open ) return( 0 );
 
 
-	/* Allocate memory for read buffer */
-	
-	
-	//memset (&readBuffer, '\0', sizeof readBuffer);
-	
-	//    ofstream sensorData("sensor.log",ios::app);
 	/* *** READ *** */
 
 	//pointing to address?
 	readCheck = read( thePORT, readBuffer , sizeof readBuffer);
 
-	/* Error Handling */
-//	if (readCheck < 0)
-//	{
-//	    cout << "Error reading: " << strerror(errno) << endl;
-//	}
-
-	//cout << "Read: " << readBuffer<< endl;
-
-
-//	length1=length(buf);
-//	if(length1>0)
-//	   {time(&rawtime);
-//	     timeinfo = localtime (&rawtime);
-//	    strftime (buffer,80,"%F-%I-%M-%S ",timeinfo);
-// 	   sensorData<<buffer<<buf;
-//	  sensorData.close(); 
+	
 
    	return readCheck;
 	
